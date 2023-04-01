@@ -340,7 +340,18 @@ export default {
     toggleTask(index) {
       this.taskList[index].done = !this.taskList[index].done;
       this.saveData(this.taskList);
+    },
+    async accept() {
+      this.showUpgradeUI = false
+      await this.$workbox.messageSW({ type: "SKIP_WAITING" });
     }
-  }
+  },
+  created() {
+    if (this.$workbox) {
+      this.$workbox.addEventListener("waiting", () => {
+        this.showUpgradeUI = true;
+      });
+    }
+  },
 };
 </script>
